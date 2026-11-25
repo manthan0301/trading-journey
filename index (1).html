@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Trading Journey</title>
+<style>
+:root{--bg:#eef0ff;--card:rgba(255,255,255,.72);--tx:#14162b;--mut:#6b7090;--bd:rgba(120,110,255,.2);--gain:#0aa874;--loss:#ee3f56;--pri:#6c5ce7;--pri2:#00bfe8;--m1:#cfc8ff;--m2:#c2f4ff;--ff:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0b17;--card:rgba(28,30,58,.62);--tx:#f1f2ff;--mut:#9096c0;--bd:rgba(150,140,255,.22);--gain:#2ef2b1;--loss:#ff5d73;--pri:#8b7cff;--pri2:#27d9ff;--m1:#2b2070;--m2:#07404f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a0b17;--card:rgba(28,30,58,.62);--tx:#f1f2ff;--mut:#9096c0;--bd:rgba(150,140,255,.22);--gain:#2ef2b1;--loss:#ff5d73;--pri:#8b7cff;--pri2:#27d9ff;--m1:#2b2070;--m2:#07404f;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;color:var(--tx);font-family:var(--ff);background:radial-gradient(60% 40% at 0% 0%,var(--m1),transparent 70%),radial-gradient(55% 40% at 100% 25%,var(--m2),transparent 70%),var(--bg);background-attachment:fixed;min-height:100vh}
+button,input{font:inherit;color:inherit}
+.app{max-width:520px;margin:0 auto;padding:20px 16px 120px}
+h2{margin:0 0 14px;font-size:24px;letter-spacing:-.5px}
+h3{margin:0 0 10px;font-size:15px}
+.card{background:var(--card);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--bd);border-radius:24px;padding:16px;margin-bottom:14px}
+.mut{color:var(--mut);font-size:13px}
+.gain{color:var(--gain)}.loss{color:var(--loss)}
+.gt{background:linear-gradient(100deg,var(--pri),var(--pri2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.big{font-size:34px;font-weight:800;letter-spacing:-1px;margin:2px 0}
+.btn{width:100%;padding:15px;border:0;border-radius:16px;background:linear-gradient(120deg,var(--pri),var(--pri2));color:#fff;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 8px 24px -8px var(--pri)}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--bd);box-shadow:none}
+.btn.red{background:transparent;color:var(--loss);border:1px solid var(--loss);box-shadow:none}
+input{width:100%;padding:13px;margin:6px 0 12px;border:1px solid var(--bd);border-radius:14px;background:color-mix(in srgb,var(--bg) 55%,transparent);outline:0}
+input:focus{border-color:var(--pri)}
+label{font-size:12px;color:var(--mut);letter-spacing:.04em;text-transform:uppercase}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hero{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.st{border-radius:20px;padding:14px;border:1px solid var(--bd)}
+.st.p{background:linear-gradient(135deg,color-mix(in srgb,var(--gain) 20%,transparent),transparent)}
+.st.l{background:linear-gradient(135deg,color-mix(in srgb,var(--loss) 20%,transparent),transparent)}
+.st b{font-size:21px;display:block;margin:4px 0 2px}
+.seg{display:flex;background:color-mix(in srgb,var(--bg) 55%,transparent);border:1px solid var(--bd);border-radius:14px;padding:3px;gap:3px;margin:6px 0 14px}
+.seg button{flex:1;border:0;background:transparent;padding:9px;border-radius:11px;cursor:pointer;color:var(--mut)}
+.seg button.on{background:linear-gradient(120deg,var(--pri),var(--pri2));color:#fff;font-weight:700}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:4px;padding:6px;border-radius:999px;background:var(--card);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--bd);box-shadow:0 12px 40px -12px #000a}
+.nav button{border:0;background:none;padding:10px 20px;border-radius:999px;color:var(--mut);font-size:13px;cursor:pointer}
+.nav button.on{background:linear-gradient(120deg,var(--pri),var(--pri2));color:#fff;font-weight:700}
+.logo{width:76px;height:76px;border-radius:26px;display:grid;place-items:center;font-size:36px;margin:34px 0 14px;background:linear-gradient(135deg,var(--pri),var(--pri2));box-shadow:0 14px 40px -10px var(--pri)}
+.av{width:62px;height:62px;border-radius:50%;background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;display:grid;place-items:center;font-size:26px;font-weight:800}
+.pr{display:flex;gap:14px;align-items:center}
+.t{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--bd)}
+.t:last-child{border:0}
+.x{border:0;background:none;color:var(--mut);font-size:19px;cursor:pointer;padding:2px 6px}
+.empty{padding:24px 0;text-align:center;color:var(--mut);font-size:14px}
+.err{color:var(--loss);font-size:13px;min-height:18px;margin-bottom:8px}
+.dots{display:flex;gap:6px;margin-bottom:14px}.dots i{height:5px;flex:1;border-radius:9px;background:var(--bd)}.dots i.on{background:linear-gradient(90deg,var(--pri),var(--pri2))}
+#cw{position:relative}
+#cw svg{width:100%;height:auto;display:block;margin-top:8px;cursor:crosshair;touch-action:pan-y}
+.tip{position:absolute;display:none;pointer-events:none;background:var(--tx);color:var(--bg);padding:7px 10px;border-radius:10px;font-size:12px;line-height:1.5;white-space:nowrap;z-index:2}
+html{scroll-behavior:smooth}
+.nav{view-transition-name:nav}
+::view-transition-old(root),::view-transition-new(root){mix-blend-mode:normal}
+::view-transition-old(root){animation:vo .28s cubic-bezier(.4,0,1,1) both}
+::view-transition-new(root){animation:vn .5s cubic-bezier(.2,.7,.2,1) both}
+@keyframes vo{to{opacity:0;transform:translateY(-10px) scale(.985)}}
+@keyframes vn{from{opacity:0;transform:translateY(16px) scale(.99)}}
+.app>*{animation:up .5s cubic-bezier(.2,.7,.2,1) both}
+.app>*:nth-child(2){animation-delay:.06s}.app>*:nth-child(3){animation-delay:.12s}.app>*:nth-child(4){animation-delay:.18s}.app>*:nth-child(5){animation-delay:.24s}.app>*:nth-child(n+6){animation-delay:.3s}
+@keyframes up{from{opacity:0;transform:translateY(16px) scale(.98)}}
+.still>*,.still .draw,.still .fade,.still .rgc{animation:none}
+body,.card,.st,.nav,.seg,.nav button,.seg button{transition:background-color .4s,color .4s,border-color .4s}
+.btn,.nav button,.seg button,.x{transition:transform .2s,box-shadow .25s,color .3s,opacity .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px -8px var(--pri)}
+.btn:active,.nav button:active,.seg button:active,.x:active{transform:scale(.95)}
+.nav button:hover:not(.on),.seg button:hover:not(.on){color:var(--tx)}
+input{transition:border-color .25s,box-shadow .25s}
+input:focus{box-shadow:0 0 0 4px color-mix(in srgb,var(--pri) 22%,transparent)}
+@keyframes dr{from{stroke-dasharray:1;stroke-dashoffset:1}to{stroke-dasharray:1;stroke-dashoffset:0}}
+.draw{animation:dr 1.3s cubic-bezier(.4,0,.2,1) .2s both}
+@keyframes fi{from{opacity:0}}
+.fade{animation:fi .8s ease .7s both}
+@keyframes rgk{from{stroke-dasharray:0 400}}
+.rgc{animation:rgk 1.2s cubic-bezier(.2,.7,.2,1) .25s both}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}}
+.nav button{position:relative;z-index:1;font-weight:600;transition:color .35s,transform .2s}
+.nav button.on{background:none;color:#fff;font-weight:600}
+.ind{position:absolute;top:6px;bottom:6px;left:0;width:0;border-radius:999px;background:linear-gradient(120deg,var(--pri),var(--pri2));box-shadow:0 6px 18px -6px var(--pri);transition:transform .5s cubic-bezier(.2,.8,.2,1),width .5s cubic-bezier(.2,.8,.2,1),opacity .3s}
+::view-transition-group(nav),::view-transition-new(nav){animation:none}
+::view-transition-old(nav){display:none}
+.dh{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+select{width:100%;padding:13px;margin:6px 0 12px;border:1px solid var(--bd);border-radius:14px;background:color-mix(in srgb,var(--bg) 55%,transparent);font:inherit;color:inherit;outline:0}
+.nav button{padding:10px 15px}
+.bar{height:8px;border-radius:9px;background:var(--bd);overflow:hidden;margin:8px 0}.bar u{display:block;height:100%;border-radius:9px;transition:width .6s}
+.chip{display:inline-block;font-size:11px;padding:2px 9px;border-radius:99px;background:color-mix(in srgb,var(--pri) 20%,transparent);margin-top:4px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center}
+.cal i{aspect-ratio:1}.cal div{aspect-ratio:1;border-radius:10px;border:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:12px;line-height:1.2}
+.cal div span{font-size:9px;font-weight:700}.cal .h{border:0;aspect-ratio:auto;color:var(--mut);font-size:11px}
+.tl{padding:12px;border-radius:16px;border:1px solid var(--bd);background:var(--card)}.tl b{display:block;font-size:18px;margin-top:2px}
+.cf{position:fixed;top:-14px;width:8px;height:12px;border-radius:2px;z-index:9;pointer-events:none;animation:fall 3s ease-in forwards}
+@keyframes fall{to{transform:translateY(105vh) rotate(720deg)}}
+.wo{position:fixed;inset:0;background:#0009;display:grid;place-items:center;z-index:20;animation:fi .25s both}
+.wb{background:var(--bg);border:1px solid var(--loss);border-radius:24px;padding:24px;max-width:320px;width:86%;text-align:center;box-shadow:0 20px 60px -10px var(--loss);animation:pop .45s cubic-bezier(.2,.9,.3,1.3) both}
+@keyframes pop{from{transform:scale(.8);opacity:0}}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<div class="nav" id="nav"></div>
+<script>
+if(!window.claude)window.claude={use:async()=>({save:async({filename:f,data:d})=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([d]));a.download=f;document.body.appendChild(a);a.click();a.remove()}})};
+const K="tj-v1";
+let S={user:null,set:{theme:"auto",font:"sans",size:16},fee:65.8,j:null};
+try{Object.assign(S,JSON.parse(localStorage.getItem(K)||"{}"))}catch(e){}
+let v=S.user?"home":"login",pv="",ei=null,fq="",ff="all",mo=0,step=1,tmp={cap:""},CH=null;
+const FF={sans:'system-ui,-apple-system,"Segoe UI",Roboto,sans-serif',serif:'Georgia,"Times New Roman",serif',mono:'ui-monospace,Menlo,Consolas,monospace'};
+const $=id=>document.getElementById(id);
+const sv=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const inr=n=>S.hide?"₹ ••••":(n<0?"-":"")+"₹"+Math.abs(n).toLocaleString("en-IN",{maximumFractionDigits:2});
+const cls=n=>n>=0?"gain":"loss";
+function apply(){const r=document.documentElement;
+  if(S.set.theme=="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",S.set.theme);
+  r.style.setProperty("--ff",FF[S.set.font]);r.style.fontSize=S.set.size+"px"}
+function stats(){let tp=0,tl=0,w=0,l=0,fe=0;
+  S.j.trades.forEach(x=>{fe+=x.c||0;if(x.p>0){tp+=x.p;w++}else{tl+=x.p;l++}});
+  return{tp,tl,w,l,fe,net:tp+tl,bal:S.j.cap+tp+tl}}
+function chart(){
+  const j=S.j;if(!j||!j.trades.length){CH=null;return'<div class="empty">Add a trade to see your balance curve.</div>'}
+  const seq=[...j.trades].reverse().sort((a,b)=>(a.dt||"").localeCompare(b.dt||""));
+  let b=j.cap;const pts=[b];seq.forEach(t=>{b+=t.p;pts.push(b)});
+  const W=600,H=200,pl=10,n=pts.length;
+  let mn=Math.min(...pts,j.cap),mx=Math.max(...pts,j.target);if(mn==mx){mn-=1;mx+=1}
+  const x=i=>n>1?pl+i*(W-2*pl)/(n-1):W/2,y=v=>14+(mx-v)*(H-28)/(mx-mn);
+  CH={pts,seq,W,H,x,y,n};
+  const col=b>=j.cap?"var(--gain)":"var(--loss)";
+  const ln=pts.map((v,i)=>(i?"L":"M")+x(i).toFixed(1)+" "+y(v).toFixed(1)).join("");
+  const dots=pts.map((v,i)=>i?`<circle cx="${x(i).toFixed(1)}" cy="${y(v).toFixed(1)}" r="4.5" fill="${v>=pts[i-1]?"var(--gain)":"var(--loss)"}" stroke="var(--bg)" stroke-width="2"/>`:"").join("");
+  const hl=(v,c)=>`<line x1="${pl}" x2="${W-pl}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" stroke="${c}" stroke-dasharray="4 6" opacity=".8"/>`;
+  return`<div id="cw"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Balance chart"><defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".35"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>${hl(j.cap,"var(--mut)")}${hl(j.target,"var(--pri2)")}<path d="${ln} L${x(n-1).toFixed(1)} ${H-14} L${x(0).toFixed(1)} ${H-14}Z" fill="url(#ag)" class="fade"/><path pathLength="1" class="draw" d="${ln}" fill="none" stroke="${col}" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round" style="filter:drop-shadow(0 0 6px ${col})"/><g class="fade">${dots}</g><line id="hl" y1="14" y2="${H-14}" stroke="var(--tx)" opacity="0"/><circle id="hd" r="6.5" fill="var(--tx)" stroke="var(--bg)" stroke-width="2" opacity="0"/></svg><div id="tip" class="tip"></div></div><div class="mut" style="margin-top:6px">- - Capital &nbsp; <span style="color:var(--pri2)">- - Target</span></div>`}
+function initChart(){const svg=document.querySelector("#cw svg");if(!svg||!CH)return;
+  const hl=$("hl"),hd=$("hd"),tip=$("tip"),{pts,seq,W,H,x,y,n}=CH;
+  function show(e){const r=svg.getBoundingClientRect();
+    let i=Math.round(((e.clientX-r.left)/r.width*W-10)/((W-20)/Math.max(n-1,1)));i=Math.max(0,Math.min(n-1,i));
+    const cx=x(i),cy=y(pts[i]);
+    hl.setAttribute("x1",cx);hl.setAttribute("x2",cx);hl.setAttribute("opacity",.4);
+    hd.setAttribute("cx",cx);hd.setAttribute("cy",cy);hd.setAttribute("opacity",1);
+    const t=i?seq[i-1]:null;
+    tip.innerHTML=t?`<b>${esc(t.sym)}</b> · ${t.dt||""}<br>${t.p>=0?"▲ Profit":"▼ Loss"} ${inr(Math.abs(t.p))}<br>Balance ${inr(pts[i])}`:`<b>Start</b><br>Balance ${inr(pts[0])}`;
+    tip.style.display="block";
+    tip.style.left=Math.max(0,Math.min(r.width-tip.offsetWidth,cx/W*r.width-tip.offsetWidth/2))+"px";
+    let ty=svg.offsetTop+cy/H*r.height-tip.offsetHeight-12;if(ty<0)ty=svg.offsetTop+cy/H*r.height+14;
+    tip.style.top=ty+"px"}
+  const hide=()=>{hl.setAttribute("opacity",0);hd.setAttribute("opacity",0);tip.style.display="none"};
+  svg.addEventListener("pointermove",show);svg.addEventListener("pointerdown",show);svg.addEventListener("pointerleave",hide)}
+function ring(p){const R=52,C=2*Math.PI*R;
+  return`<svg viewBox="0 0 120 120" width="116" height="116" role="img" aria-label="Target progress"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--pri)"/><stop offset="1" stop-color="var(--pri2)"/></linearGradient></defs><circle cx="60" cy="60" r="${R}" fill="none" stroke="var(--bd)" stroke-width="10"/><circle cx="60" cy="60" r="${R}" fill="none" stroke="url(#rg)" class="rgc" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(C*p/100).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 60 60)"/><text x="60" y="60" text-anchor="middle" font-size="22" font-weight="800" fill="var(--tx)">${p.toFixed(0)}%</text><text x="60" y="77" text-anchor="middle" font-size="10" fill="var(--mut)">of target</text></svg>`}
+function pcards(s){return`<div class="g2" style="margin-bottom:14px"><div class="st p"><div class="mut">▲ Total profit</div><b class="gain">${inr(s.tp)}</b><div class="mut">${s.w} winning trade${s.w==1?"":"s"}</div></div><div class="st l"><div class="mut">▼ Total loss</div><b class="loss">${inr(s.tl)}</b><div class="mut">${s.l} losing trade${s.l==1?"":"s"}</div></div></div>`}
+function totbox(j,s){return`<div class="card"><h3>💰 Total amount</h3><div class="t"><span class="mut">Starting capital</span><b>${inr(j.cap)}</b></div><div class="t"><span class="mut">▲ Total profit</span><b class="gain">+${inr(s.tp)}</b></div><div class="t"><span class="mut">▼ Total loss</span><b class="loss">${inr(s.tl)}</b></div><div class="t"><span class="mut">Net P&amp;L (after charges)</span><b class="${cls(s.net)}">${s.net>=0?"+":""}${inr(s.net)}</b></div><div class="t"><b>Total amount left</b><b class="${cls(s.net)}" style="font-size:22px">${inr(s.bal)}</b></div><div class="mut" style="margin-top:8px">Total brokerage of ${inr(s.fe)} is already deducted.</div></div>`}
+function navUpdate(){const n=$("nav");
+  if(!S.user||v=="wiz"){n.style.display="none";return}
+  n.style.display="";
+  let first=false;
+  if(!n.dataset.b){first=true;n.innerHTML='<i class="ind"></i>'+[["home","Home"],["trades","Trades"],["stats","Insights"],["profile","Profile"]].map(([k,l])=>`<button data-a="nav" data-v="${k}">${l}</button>`).join("");n.dataset.b=1}
+  n.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.v==v));
+  const a=n.querySelector("button.on"),i=n.querySelector(".ind");
+  if(first)i.style.transition="none";
+  if(a){i.style.opacity=1;i.style.width=a.offsetWidth+"px";i.style.transform=`translateX(${a.offsetLeft}px)`}else i.style.opacity=0;
+  if(first){i.offsetWidth;i.style.transition=""}}
+addEventListener("resize",navUpdate);
+const fmt=k=>k?new Date(k+"T00:00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short",year:"numeric"}):"No date";
+function hist(j){
+  const ord=j.trades.map((t,i)=>({t,i})).sort((a,b)=>(a.t.dt||"").localeCompare(b.t.dt||"")||b.i-a.i);
+  let run=j.cap;const D=[],M={};
+  ord.forEach(o=>{run+=o.t.p;o.bal=run;const k=o.t.dt||"";if(!M[k]){M[k]={k,n:D.length+1,rows:[],p:0};D.push(M[k])}const d=M[k];if(pass(o.t))d.rows.push(o);d.p+=o.t.p;d.end=run});
+  const row=({t,i,bal})=>`<div class="t"><div><b>${esc(t.sym)}</b><div class="mut">${t.q?`${t.q} × ${inr(t.b)} → ${inr(t.s)}`:""}${t.q&&t.c?" · ":""}${t.c?`charges ${inr(t.c)}`:""}</div>${t.q?`<div class="mut">Invested ${inr(t.q*t.b)} → Received ${inr(t.q*t.s-(t.c||0))}</div>`:""}${t.tg?`<span class="chip">${esc(t.tg)}</span>`:""}${t.nt?`<div class="mut">📝 ${esc(t.nt)}</div>`:""}</div><div style="text-align:right"><b class="${cls(t.p)}">${t.p>=0?"+":""}${inr(t.p)}</b><button class="x" data-a="ed" data-v="${i}" aria-label="Edit">✎</button><button class="x" data-a="del" data-v="${i}" aria-label="Delete">×</button><div class="mut">Capital ${inr(bal)}</div></div></div>`;
+  return D.reverse().filter(d=>d.rows.length).map(d=>`<div class="card"><div class="dh"><div><b class="gt" style="font-size:19px">Day ${d.n}</b><div class="mut">${fmt(d.k)} · ${d.rows.length} trade${d.rows.length==1?"":"s"}</div></div><div style="text-align:right"><b class="${cls(d.p)}" style="font-size:18px">${d.p>=0?"+":""}${inr(d.p)}</b><div class="mut">Day-end capital ${inr(d.end)}</div></div></div>${d.rows.slice().reverse().map(row).join("")}</div>`).join("")}
+function calc(q,b,s,ty){const bt=q*b,st=q*s,t=bt+st,br=Math.min(20,bt*.0003)+Math.min(20,st*.0003),stt=ty=="i"?st*.00025:t*.001,ex=t*.0000297,sb=t*.000001;return br+stt+ex+sb+(br+ex+sb)*.18+(ty=="i"?bt*.00003:bt*.00015)}
+function pass(t){return(ff=="all"||(ff=="p"&&t.p>0)||(ff=="l"&&t.p<=0))&&(!fq||(t.sym+" "+(t.tg||"")+" "+(t.nt||"")).toLowerCase().includes(fq.toLowerCase()))}
+function party(){for(let i=0;i<46;i++){const e=document.createElement("i");e.className="cf";e.style.cssText=`left:${Math.random()*100}vw;background:hsl(${Math.random()*360} 85% 60%);animation-delay:${Math.random()*.6}s;animation-duration:${2+Math.random()*1.5}s`;document.body.appendChild(e);setTimeout(()=>e.remove(),4800)}}
+function chk(){if(!S.j)return;const w=stats().bal>=S.j.target;if(w&&!S.j.won){S.j.won=true;sv();party()}else if(!w&&S.j.won){S.j.won=false;sv()}}
+function warn(i,t,m){const o=document.createElement("div");o.className="wo";o.innerHTML=`<div class="wb"><div style="font-size:44px">${i}</div><h3 class="loss" style="font-size:18px">${t}</h3><p class="mut" style="margin:0 0 14px">${m}</p><button class="btn">Got it</button></div>`;o.onclick=e=>{if(e.target==o||e.target.tagName=="BUTTON")o.remove()};document.body.appendChild(o)}
+function tloss(){const td=new Date().toISOString().slice(0,10);return Math.max(0,-S.j.trades.filter(t=>t.dt==td).reduce((a,t)=>a+t.p,0))}
+function chkw(u0){const l=S.lim||0;if(!l||!S.j)return;const u=tloss();
+  if(u>=l&&u0<l)warn("⚠️","Daily loss limit reached","Today’s loss is "+inr(u)+" (limit "+inr(l)+"). Stop trading for today.");
+  else if(u<l&&u>=l*.8&&u0<l*.8)warn("⚠️","Close to your loss limit","You have used "+Math.round(u/l*100)+"% of today’s loss limit.")}
+function limbox(){const j=S.j;if(!j)return"";const s=stats();
+  let h=s.bal>=j.target?'<div class="card"><h3 class="gain">🎉 Target reached!</h3><div class="mut">You hit your target capital. Reset your journey in Profile to set a new one.</div></div>':"";
+  const l=S.lim||0;if(l){const td=new Date().toISOString().slice(0,10),u=Math.max(0,-j.trades.filter(t=>t.dt==td).reduce((a,t)=>a+t.p,0)),hit=u>=l;
+    h+=`<div class="card"${hit?' style="border-color:var(--loss)"':""}><h3 class="${hit?"loss":""}">${hit?"⚠️ Daily loss limit reached":"🛡️ Daily loss limit"}</h3><div class="bar"><u style="width:${Math.min(100,u/l*100)}%;background:${hit?"var(--loss)":"linear-gradient(90deg,var(--pri),var(--pri2))"}"></u></div><div class="mut">Today’s loss ${inr(u)} of ${inr(l)}${hit?". Stop trading for today.":""}</div></div>`}else h+='<div class="card"><h3>🛡️ Set a daily loss limit</h3><div class="mut">Get a warning when today’s loss gets close to your limit.</div><button class="btn ghost" style="margin-top:10px" data-a="nav" data-v="profile">Set limit</button></div>';
+  return h}
+function insights(j){
+  const o=[...j.trades].reverse().sort((a,b)=>(a.dt||"").localeCompare(b.dt||""));
+  let b=j.cap,pk=b,dd=0,cw=0,cl=0,ws=0,ls=0;
+  o.forEach(t=>{b+=t.p;pk=Math.max(pk,b);dd=Math.max(dd,pk-b);if(t.p>0){cw++;cl=0}else{cl++;cw=0}ws=Math.max(ws,cw);ls=Math.max(ls,cl)});
+  const W=o.filter(t=>t.p>0),L=o.filter(t=>t.p<=0),sm=a=>a.reduce((x,t)=>x+t.p,0),gp=sm(W),gl=Math.abs(sm(L));
+  const T=(l,v,c="")=>`<div class="tl"><span class="mut">${l}</span><b class="${c}">${v}</b></div>`;
+  const best=o.length?Math.max(...o.map(t=>t.p)):0,worst=o.length?Math.min(...o.map(t=>t.p)):0;
+  const d=new Date();d.setDate(1);d.setMonth(d.getMonth()+mo);const y=d.getFullYear(),m=d.getMonth(),f=(d.getDay()+6)%7,n=new Date(y,m+1,0).getDate();
+  const P={};o.forEach(t=>{if(t.dt)P[t.dt]=(P[t.dt]||0)+t.p});
+  const mx=Math.max(1,...Object.values(P).map(Math.abs));let mt=0,cells="";
+  for(let i=0;i<f;i++)cells+="<i></i>";
+  for(let k=1;k<=n;k++){const key=`${y}-${String(m+1).padStart(2,"0")}-${String(k).padStart(2,"0")}`,p=P[key];if(p!==undefined)mt+=p;
+    cells+=`<div${p===undefined?"":` style="background:color-mix(in srgb,var(--${p>=0?"gain":"loss"}) ${15+Math.abs(p)/mx*45}%,transparent)"`}>${k}<span>${p===undefined?"":S.hide?"•":(p>=0?"+":"-")+(Math.abs(p)>=1000?(Math.abs(p)/1000).toFixed(1)+"k":Math.round(Math.abs(p)))}</span></div>`}
+  return`<div class="g2" style="margin-bottom:14px">${T("Win rate",o.length?Math.round(W.length/o.length*100)+"%":"–")}${T("Total trades",o.length)}${T("Average profit",W.length?inr(gp/W.length):"–","gain")}${T("Average loss",L.length?inr(-gl/L.length):"–","loss")}${T("Best trade",inr(best),"gain")}${T("Worst trade",inr(worst),"loss")}${T("Win streak",ws)}${T("Loss streak",ls)}${T("Max drawdown",inr(-dd),"loss")}${T("Profit factor",gl?(gp/gl).toFixed(2):(gp?"∞":"–"))}</div><div class="card"><div class="dh" style="padding-bottom:12px"><button class="x" data-a="mp" aria-label="Previous month">‹</button><div style="text-align:center"><b>${d.toLocaleDateString("en-IN",{month:"long",year:"numeric"})}</b><div class="${cls(mt)}" style="font-size:13px;font-weight:600">${mt>=0?"+":""}${inr(mt)}</div></div><button class="x" data-a="mn" aria-label="Next month">›</button></div><div class="cal" style="margin-top:12px">${["M","T","W","T","F","S","S"].map(x=>`<div class="h">${x}</div>`).join("")}${cells}</div></div>`}
+async function exp(k){try{if(!S.j&&k!="j")return;const d=await claude.use("downloads");if(!d)return;
+  if(k=="j")await d.save({filename:"trading-journey-backup.json",data:JSON.stringify(S)});
+  else{const q=x=>'"'+String(x??"").replace(/"/g,'""')+'"';
+    const rows=[["Date","Trade","Type","Qty","Buy","Sell","Charges","Net P&L","Tag","Note"],...[...S.j.trades].reverse().map(t=>[t.dt,t.sym,t.ty=="i"?"Intraday":"Delivery",t.q,t.b,t.s,t.c,t.p,t.tg,t.nt])];
+    await d.save({filename:"trades.csv",data:rows.map(r=>r.map(q).join(",")).join("\n")})}}catch(e){}}
+document.addEventListener("change",e=>{if(e.target.id!="imp"||!e.target.files[0])return;const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);if(d&&d.set){Object.assign(S,d);sv();v=S.user?"home":"login";render()}}catch(x){}};r.readAsText(e.target.files[0])});
+function view(){
+  const j=S.j,u=S.user;let h="";
+  if(v=="login")h=`<div class="logo">📈</div><h2 class="gt" style="font-size:32px">Trading Journey</h2><p class="mut" style="margin:-6px 0 18px;font-size:15px">Track every trade. Grow your capital.</p><form id="lf" class="card"><label>Email</label><input id="em" type="email" required placeholder="you@example.com"><label>Username</label><input id="un" required maxlength="24" placeholder="Your username"><button class="btn">Continue</button><p class="mut" style="margin:12px 0 0">Your data is saved only in this browser.</p></form>`;
+  else if(v=="home"){
+    h=`<h2 style="display:flex;justify-content:space-between;align-items:center"><span>Hi, <span class="gt">${esc(u.username)}</span> 👋</span><button class="x" data-a="eye" aria-label="Hide amounts">${S.hide?"🙈":"👁"}</button></h2>`;
+    if(j){const s=stats(),pc=Math.max(0,Math.min(100,(s.bal-j.cap)/(j.target-j.cap)*100));
+      h+=`<div class="card"><div class="hero"><div><div class="mut">Current balance</div><div class="big ${cls(s.net)}">${inr(s.bal)}</div><div class="${cls(s.net)}" style="font-weight:600">${s.net>=0?"▲ +":"▼ "}${inr(s.net)} (${(s.net/j.cap*100).toFixed(2)}%)</div><div class="mut" style="margin-top:6px">Target ${inr(j.target)}</div></div>${ring(pc)}</div></div><div class="card"><h3>Balance curve</h3>${chart()}</div>${pcards(s)}${totbox(j,s)}${limbox()}<button class="btn" data-a="nav" data-v="trades">+ Add a trade</button>`}
+    else h+=`<div class="card"><div class="empty">No journey yet.<br>Your balance curve will appear here.</div></div><button class="btn" data-a="wiz">Start your trading journey</button>`}
+  else if(v=="wiz")h=`<div class="dots"><i class="on"></i><i class="${step==2?"on":""}"></i></div>`+(step==1?`<h2>Enter your capital</h2><p class="mut">How much money are you starting with?</p><div class="card"><label>Capital (₹)</label><input id="w1" type="number" min="1" step="any" value="${tmp.cap}" placeholder="15000"><div class="err" id="er"></div><button class="btn" data-a="next">Next</button></div><button class="btn ghost" data-a="nav" data-v="home">Cancel</button>`:`<h2>Enter your target capital</h2><p class="mut">How much do you want to grow it to? Starting capital: ${inr(+tmp.cap)}.</p><div class="card"><label>Target capital (₹)</label><input id="w2" type="number" min="1" step="any" placeholder="30000"><div class="err" id="er"></div><button class="btn" data-a="fin">Start</button></div><button class="btn ghost" data-a="back">Back</button>`);
+  else if(v=="trades"){
+    if(!j)h=`<h2>Trades</h2><div class="card"><div class="empty">Start your journey first.</div><button class="btn" data-a="wiz">Start your trading journey</button></div>`;
+    else{const s=stats(),E=ei===null?null:j.trades[ei];
+      h=`<h2>Trades</h2>${totbox(j,s)}${limbox()}<div class="card"><div class="g2"><div><div class="mut">Starting capital</div><b style="font-size:19px">${inr(j.cap)}</b></div><div><div class="mut">Current capital</div><b class="${cls(s.net)}" style="font-size:19px">${inr(s.bal)}</b></div></div><div class="${cls(s.net)}" style="margin-top:8px;font-weight:600">${s.net>=0?"▲ +":"▼ "}${inr(s.net)} (${(s.net/j.cap*100).toFixed(2)}%) change in capital</div>${chart()}<div class="mut">Target ${inr(j.target)}</div></div>${pcards(s)}<form id="tf" class="card"><h3>${E?"Edit trade":"New trade"}</h3><label>Trade name</label><input id="sy" required maxlength="20" placeholder="e.g. TCS" value="${E?esc(E.sym):""}"><div class="g2"><div><label>Quantity</label><input id="qy" type="number" min="0.0001" step="any" required placeholder="10" value="${E&&E.q||""}"></div><div><label>Buy price (₹)</label><input id="by" type="number" min="0.0001" step="any" required placeholder="100" value="${E&&E.b||""}"></div><div><label>Sell price (₹)</label><input id="sp" type="number" min="0.0001" step="any" required placeholder="110" value="${E&&E.s||""}"></div><div><label>Date</label><input id="dt" type="date" value="${E&&E.dt||new Date().toISOString().slice(0,10)}"></div></div><label>Trade type</label><select id="ty"><option value="d">Delivery</option><option value="i"${E&&E.ty=="i"?" selected":""}>Intraday</option></select><label>Strategy / tag</label><input id="tg" placeholder="e.g. Breakout" value="${E?esc(E.tg||""):""}"><label>Note</label><input id="nt" placeholder="Why did you take this trade?" value="${E?esc(E.nt||""):""}"><label>Charges / brokerage (₹)</label><input id="ch" type="number" min="0" step="any" value="${E?E.c:S.fee}"><div class="g2"><div><label>Amount invested</label><input id="iv" readonly style="font-weight:700" value="${E&&E.q?inr(E.q*E.b):""}"></div><div><label>Amount received</label><input id="rc" readonly style="font-weight:700" value="${E&&E.q?inr(E.q*E.s-E.c):""}"></div></div><label>Net profit / loss after charges</label><input id="pf" readonly style="font-weight:700" placeholder="Calculated automatically" class="${E?cls(E.p):""}" value="${E?(E.p>=0?"Profit ":"Loss ")+inr(Math.abs(E.p)):""}"><button class="btn">${E?"Save changes":"Add trade"}</button>${E?'<button type="button" class="btn ghost" style="margin-top:8px" data-a="cx">Cancel</button>':""}</form><h2 style="margin:6px 0 12px">Day by day</h2><input id="sq" placeholder="Search name, tag or note" value="${esc(fq)}"><div class="seg">${[["all","All"],["p","Profit"],["l","Loss"]].map(([a,b])=>`<button class="${ff==a?"on":""}" data-a="ff" data-v="${a}">${b}</button>`).join("")}</div><div id="hs">${j.trades.length?hist(j):'<div class="card"><div class="empty">No trades yet.</div></div>'}</div>`}}
+  else if(v=="stats"){h=`<h2>Insights</h2>`+(j?insights(j):'<div class="card"><div class="empty">Start your journey to see insights.</div></div>')}
+  else if(v=="profile"){
+    const sg=(k,items)=>`<div class="seg">${items.map(([a,b])=>`<button class="${S.set[k]==a?"on":""}" data-a="set" data-k="${k}" data-v="${a}"${typeof a=="number"?' data-n="1"':""}>${b}</button>`).join("")}</div>`;
+    h=`<h2>Profile</h2><div class="card"><div class="pr"><div class="av">${esc(u.username[0]||"U").toUpperCase()}</div><div><b style="font-size:18px">${esc(u.username)}</b><div class="mut">${esc(u.email)}</div></div></div></div><div class="card"><h3>Appearance</h3><label>Theme</label>${sg("theme",[["auto","Auto"],["light","☀️ Light"],["dark","🌙 Dark"]])}<label>Font</label>${sg("font",[["sans","Default"],["serif","Serif"],["mono","Mono"]])}<label>Text size</label>${sg("size",[[14,"Small"],[16,"Medium"],[18,"Large"]])}</div><div class="card"><h3>Charges per trade</h3><p class="mut" style="margin:0 0 8px">This brokerage is applied automatically to every new trade.</p><label>Default charge (₹)</label><input id="fee" type="number" min="0" step="any" value="${S.fee}"><label>Charge mode</label>${sg("cm",[["flat","Flat per trade"],["auto","Auto estimate"]])}<p class="mut" style="margin:-4px 0 12px">Auto estimates brokerage, STT, GST and other charges from the trade value. These are approximate, so check your broker’s contract note.</p><label>Daily loss limit (₹, 0 = off)</label><input id="lim" type="number" min="0" step="any" value="${S.lim||0}"></div>${j?`<div class="card"><h3>My journey</h3><div class="t"><span class="mut">Capital</span><b>${inr(j.cap)}</b></div><div class="t"><span class="mut">Target</span><b>${inr(j.target)}</b></div><h3 style="margin-top:14px">Deposit / withdraw</h3><label>Amount (₹)</label><input id="fa" type="number" min="0" step="any" placeholder="5000"><div class="g2"><button class="btn" data-a="dep">Deposit</button><button class="btn ghost" data-a="wd">Withdraw</button></div>${(j.fl||[]).slice(0,3).map(f=>`<div class="mut" style="margin-top:6px">${f.a>=0?"+":""}${inr(f.a)} · ${fmt(f.dt)}</div>`).join("")}<div style="height:12px"></div><button class="btn red" data-a="reset">Reset journey</button></div>`:""}<div class="card"><h3>Backup</h3><p class="mut" style="margin:0 0 10px">Your data lives only in this browser. Save a copy now and then.</p><div class="g2"><button class="btn" data-a="exc">Export CSV</button><button class="btn" data-a="exj">Backup file</button></div><label style="display:block;margin-top:12px">Restore from backup file</label><input id="imp" type="file" accept=".json"></div><button class="btn ghost" data-a="out">Log out</button>`}
+  $("app").innerHTML=h;$("app").classList.toggle("still",pv==v);pv=v;
+  navUpdate();
+  initChart();chk()}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(!b)return;
+  const a=b.dataset.a,d=b.dataset.v;
+  if(a=="nav"){v=d;ei=null;render()}
+  else if(a=="wiz"){step=1;tmp={cap:""};v="wiz";render()}
+  else if(a=="next"){const c=+$("w1").value;if(!(c>0)){$("er").textContent="Enter a valid capital amount.";return}tmp.cap=c;step=2;render()}
+  else if(a=="back"){step=1;render()}
+  else if(a=="fin"){const t=+$("w2").value;if(!(t>tmp.cap)){$("er").textContent="Target must be greater than your capital.";return}
+    S.j={cap:tmp.cap,target:t,trades:[]};sv();v="trades";render()}
+  else if(a=="ed"){ei=+d;render();$("tf").scrollIntoView({behavior:"smooth",block:"center"})}
+  else if(a=="cx"){ei=null;render()}
+  else if(a=="del"){ei=null;S.j.trades.splice(+d,1);sv();render()}
+  else if(a=="set"){S.set[b.dataset.k]=b.dataset.n?+d:d;sv();apply();render()}
+  else if(a=="reset"){if(confirm("Delete your journey and all trades?")){S.j=null;sv();v="home";render()}}
+  else if(a=="eye"){S.hide=!S.hide;sv();render()}
+  else if(a=="ff"){ff=d;render()}
+  else if(a=="mp"){mo--;render()}
+  else if(a=="mn"){mo++;render()}
+  else if(a=="dep"||a=="wd"){const x=+$("fa").value,g=a=="dep"?x:-x;if(x>0&&S.j.cap+g>0){S.j.cap+=g;(S.j.fl=S.j.fl||[]).unshift({a:g,dt:new Date().toISOString().slice(0,10)});sv();render()}}
+  else if(a=="exc"){exp("c")}
+  else if(a=="exj"){exp("j")}
+  else if(a=="out"){S.user=null;sv();v="login";render()}});
+document.addEventListener("submit",e=>{e.preventDefault();
+  if(e.target.id=="lf"){S.user={email:$("em").value.trim(),username:$("un").value.trim()};sv();v="home";render()}
+  else if(e.target.id=="tf"){const q=+$("qy").value,b=+$("by").value,s=+$("sp").value,c=+$("ch").value||0;
+    const nt={sym:$("sy").value.trim().toUpperCase(),q,b,s,c,ty:$("ty").value,tg:$("tg").value.trim(),nt:$("nt").value.trim(),p:Math.round(((s-b)*q-c)*100)/100,dt:$("dt").value};
+    const u0=S.lim?tloss():0;if(ei!==null){S.j.trades[ei]=nt;ei=null}else S.j.trades.unshift(nt);sv();render();chkw(u0)}});
+document.addEventListener("input",e=>{const id=e.target.id;
+  if(id=="fee"){S.fee=+e.target.value||0;sv();return}
+  if(id=="lim"){S.lim=+e.target.value||0;sv();return}
+  if(id=="sq"){fq=e.target.value;$("hs").innerHTML=hist(S.j)||'<div class="card"><div class="empty">No matching trades.</div></div>';return}
+  if(!["qy","by","sp","ch","ty"].includes(id))return;
+  if(S.set.cm=="auto"&&id!="ch"){const a=+$("qy").value,b2=+$("by").value,s2=+$("sp").value;if(a&&b2&&s2)$("ch").value=calc(a,b2,s2,$("ty").value).toFixed(2)}
+  const q=+$("qy").value,b=+$("by").value,s=+$("sp").value,c=+$("ch").value||0,f=$("pf");
+  $("iv").value=q&&b?inr(q*b):"";$("rc").value=q&&s?inr(q*s-c):"";
+  if(q&&b&&s){const g=(s-b)*q,p=g-c;f.value=(p>=0?"Profit ":"Loss ")+inr(Math.abs(p))+" (gross "+inr(g)+", charges "+inr(c)+")";f.className=cls(p)}else{f.value="";f.className=""}});
+function render(){
+  const chg=pv!==v,run=()=>{view();window.scrollTo({top:0,behavior:"instant"})};
+  if(chg&&document.startViewTransition&&!matchMedia("(prefers-reduced-motion:reduce)").matches)document.startViewTransition(run);else run()}
+if(S.j){let m=0;S.j.trades.forEach(t=>{if(t.c===undefined){t.c=S.fee;t.p=Math.round((t.q?(t.s-t.b)*t.q-S.fee:t.p-S.fee)*100)/100;m=1}});if(m)sv()}
+S.set.cm=S.set.cm||"flat";apply();view();if(S.j)setTimeout(()=>chkw(0),700);
+</script>
+</body>
+</html>
